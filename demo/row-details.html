@@ -28,7 +28,7 @@
     </p>
     <demo-snippet>
       <template>
-        <dom-bind>
+        <dom-bind id="dombind">
           <template is="dom-bind">
             <custom-style>
               <style is="custom-style">
@@ -48,6 +48,12 @@
                 }
               </style>
             </custom-style>
+            <script>
+              document.querySelector('#dombind').show = function(e) { 
+	            // Laura gets special treatment
+				return e == 'laura';
+              }
+            </script>			
             <x-data-provider data-provider="{{dataProvider}}"></x-data-provider>
 
             <vaadin-grid active-item={{activeItem}} aria-label="Row Details Example" data-provider="[[dataProvider]]" size="200">
@@ -55,7 +61,15 @@
               <template class="row-details">
                 <div class="details">
                   <img src="[[item.picture.large]]"></img>
-                  <p>Hi! My name is [[item.name.first]]!</p>
+				  <template is="dom-if" if="{{show(item.name.first)}}">
+				    <p>only shown for <em>{{item.name.first}}!</em></p>
+					<script>console.log("expanded {{item.name.first}}");</script>
+				  </template>
+				  <template is="dom-if" if="{{!show(item.name.first)}}">
+				    <p>Hi! My name is [[item.name.first]]!</p>
+					<script>console.log("expanded {{item.name.first}}");</script>
+				  </template>
+
                 </div>
               </template>
 
@@ -167,5 +181,4 @@
 
   </div>
 </body>
-
 </html>
